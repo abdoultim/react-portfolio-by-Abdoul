@@ -1,5 +1,5 @@
 // src/pages/projects/IvoireBus.tsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../assets/styles/ProjectDetail.scss";
 
@@ -23,6 +23,7 @@ type TechItem = { name: string; src: string };
 export default function IvoireBus() {
   const navigate = useNavigate();
 
+  // ✅ Tech stack
   const tech: TechItem[] = useMemo(
     () => [
       { name: "React Native / Expo", src: reactLogo },
@@ -34,25 +35,46 @@ export default function IvoireBus() {
     []
   );
 
-  // ✅ Vidéo démo (Solution A: public/)
+  // ✅ Vidéo (placée dans public/videos/)
   const demoVideoUrl = "/videos/ivoirebus-demo.mp4";
 
   // ✅ Carousel VS Code
   const vsCodeScreens = useMemo(() => [code1, code2, code3], []);
   const [index, setIndex] = useState(0);
 
+  // ✅ Lightbox
+  const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
-    // ✅ Quand on arrive sur la page projet, on remonte en haut
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, []);
 
-  const prev = () =>
+  const prev = useCallback(() => {
     setIndex((i) => (i === 0 ? vsCodeScreens.length - 1 : i - 1));
-  const next = () =>
+  }, [vsCodeScreens.length]);
+
+  const next = useCallback(() => {
     setIndex((i) => (i === vsCodeScreens.length - 1 ? 0 : i + 1));
+  }, [vsCodeScreens.length]);
+
+  const openLightbox = () => setIsOpen(true);
+  const closeLightbox = () => setIsOpen(false);
+
+  // ✅ Clavier (Esc / ← / →) quand lightbox ouvert
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isOpen, prev, next]);
 
   const goBackToProjects = () => {
-    // ✅ Retour propre vers la section Projects
     navigate("/#projects");
     setTimeout(() => {
       document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
@@ -173,6 +195,7 @@ export default function IvoireBus() {
       {/* ✅ Technologies */}
       <section className="project-section">
         <h2>Technologies</h2>
+
         <div className="tech-grid">
           {tech.map((t) => (
             <div className="tech-item" key={t.name}>
@@ -192,12 +215,12 @@ export default function IvoireBus() {
         <h2>Démo vidéo</h2>
 
         <div className="video-card">
-          <video className="video" controls src={demoVideoUrl} />
+          <video className="video video-vertical" controls src={demoVideoUrl} />
         </div>
 
         <p className="video-caption">
-          Vidéo locale (public/videos/ivoirebus-demo.mp4). Si tu veux, on peut aussi intégrer une
-          vidéo YouTube (iframe) plus légère.
+          Vidéo locale (public/videos/ivoirebus-demo.mp4). On peut aussi intégrer une vidéo
+          YouTube (iframe) si tu veux.
         </p>
       </section>
 
@@ -214,6 +237,9 @@ export default function IvoireBus() {
             src={vsCodeScreens[index]}
             alt={`Capture VS Code ${index + 1}`}
             className="carousel-image"
+            onClick={openLightbox}
+            role="button"
+            tabIndex={0}
           />
 
           <button onClick={next} className="carousel-btn" aria-label="Suivant">
@@ -221,9 +247,7 @@ export default function IvoireBus() {
           </button>
         </div>
 
-        <p className="carousel-hint">
-          Astuce : utilise les flèches pour parcourir les captures.
-        </p>
+        <p className="carousel-hint">Clique sur l’image pour l’agrandir.</p>
       </section>
 
       {/* ✅ Hébergement & mise en production */}
@@ -239,6 +263,35 @@ export default function IvoireBus() {
           Note : l’app est conçue pour s’étendre à plusieurs compagnies et plusieurs pays.
         </p>
       </section>
+
+      {/* ✅ Lightbox (clic image) */}
+      {isOpen && (
+        <div className="lightbox" onClick={closeLightbox}>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="lightbox-close"
+              onClick={closeLightbox}
+              aria-label="Fermer"
+            >
+              ✕
+            </button>
+
+            <button className="lightbox-nav left" onClick={prev} aria-label="Précédent">
+              ‹
+            </button>
+
+            <img
+              src={vsCodeScreens[index]}
+              alt={`Capture VS Code ${index + 1}`}
+              className="lightbox-image"
+            />
+
+            <button className="lightbox-nav right" onClick={next} aria-label="Suivant">
+              ›
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

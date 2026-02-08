@@ -1,28 +1,22 @@
-import React, { useEffect, useMemo, useState } from "react";
+// src/pages/projects/AnalyseSentiments.tsx
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../assets/styles/ProjectDetail.scss";
 
 /* =========================================================
    ✅ HERO + CAPTURES
-   👉 Tu mettras tes images exactement là où il faut.
-   👉 Ici je laisse des imports "placeholder" à remplacer.
    ========================================================= */
 
-// Hero (ex: NLP.png ou une capture du notebook)
+// Hero
 import heroImg from "../../assets/images/NLP.png";
 
-/**
- * ✅ Captures à insérer progressivement selon les sections
- * Remplace les fichiers par tes vrais noms (plot1.png, plot2.png, etc.)
- * Exemple :
- * import plotMissing from "../../assets/images/plot1.png";
- */
-import capMissingValues from "../../assets/images/plot1.png"; // (ex) matrice valeurs manquantes
-import capIssueDistributionBar from "../../assets/images/plot2.png"; // (ex) histogramme Issue
-import capIssueDistributionPie from "../../assets/images/plot3.png"; // (ex) donut/pie Issue
-import capSentimentDist from "../../assets/images/plot4.png"; // (ex) Distribution of sentiments
-import capBertTrainingReport from "../../assets/images/plot5.png"; // (ex) classification report
-import capPredictionExample from "../../assets/images/plot6.png"; // (ex) prédiction finale (optionnel)
+// Captures (plots)
+import capMissingValues from "../../assets/images/plot1.png";
+import capIssueDistributionBar from "../../assets/images/plot2.png";
+import capIssueDistributionPie from "../../assets/images/plot3.png";
+import capSentimentDist from "../../assets/images/plot4.png";
+import capBertTrainingReport from "../../assets/images/plot5.png";
+import capPredictionExample from "../../assets/images/plot6.png";
 
 /* =====================
    ✅ LOGOS TECH
@@ -31,11 +25,15 @@ import pythonLogo from "../../assets/logo/python-svgrepo-com.svg";
 import vscodeLogo from "../../assets/logo/vs-code-svgrepo-com.svg";
 import gitLogo from "../../assets/logo/github.png";
 import condaLogo from "../../assets/logo/conda-svgrepo-com.svg";
-
-// Optionnel : remplace plus tard par un vrai logo Jupyter/Colab si tu veux
 import notebookLogo from "../../assets/logo/rstudio-seeklogo.png";
 
 type TechItem = { name: string; src: string };
+
+// ✅ Type pour gérer un zoom (lightbox) sur n'importe quelle image
+type LightboxImage = {
+  src: string;
+  alt: string;
+};
 
 export default function AnalyseSentiments() {
   const navigate = useNavigate();
@@ -51,29 +49,67 @@ export default function AnalyseSentiments() {
     []
   );
 
-  // ✅ Carrousel global optionnel (si tu veux une section "toutes les captures")
-  // Ici on ne met PAS tout ensemble : tu as déjà les images au bon endroit dans les sections.
-  const screenshots = useMemo(
+  // ✅ Toutes les captures (pour le carousel global + navigation lightbox)
+  const screenshots = useMemo<LightboxImage[]>(
     () => [
-      capMissingValues,
-      capIssueDistributionBar,
-      capIssueDistributionPie,
-      capSentimentDist,
-      capBertTrainingReport,
-      capPredictionExample,
+      { src: capMissingValues, alt: "Visualisation des valeurs manquantes" },
+      { src: capIssueDistributionBar, alt: "Répartition des Issues (bar chart)" },
+      { src: capIssueDistributionPie, alt: "Répartition des Issues (pie chart)" },
+      { src: capSentimentDist, alt: "Distribution des sentiments" },
+      { src: capBertTrainingReport, alt: "Rapport de classification (BERT)" },
+      { src: capPredictionExample, alt: "Exemple de prédiction" },
     ],
     []
   );
+
+  // ✅ Carousel global (section “Captures (toutes)”)
   const [index, setIndex] = useState(0);
+
+  // ✅ Lightbox state
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, []);
 
-  const prev = () =>
+  const prev = useCallback(() => {
     setIndex((i) => (i === 0 ? screenshots.length - 1 : i - 1));
-  const next = () =>
+  }, [screenshots.length]);
+
+  const next = useCallback(() => {
     setIndex((i) => (i === screenshots.length - 1 ? 0 : i + 1));
+  }, [screenshots.length]);
+
+  // ✅ Lightbox navigation
+  const openLightbox = (imgIndex: number) => {
+    setActiveIndex(imgIndex);
+    setIsOpen(true);
+  };
+
+  const closeLightbox = () => setIsOpen(false);
+
+  const prevLightbox = useCallback(() => {
+    setActiveIndex((i) => (i === 0 ? screenshots.length - 1 : i - 1));
+  }, [screenshots.length]);
+
+  const nextLightbox = useCallback(() => {
+    setActiveIndex((i) => (i === screenshots.length - 1 ? 0 : i + 1));
+  }, [screenshots.length]);
+
+  // ✅ Clavier : ESC ferme, ←/→ navigue
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") prevLightbox();
+      if (e.key === "ArrowRight") nextLightbox();
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isOpen, prevLightbox, nextLightbox]);
 
   const goBackToProjects = () => {
     navigate("/#projects");
@@ -81,6 +117,14 @@ export default function AnalyseSentiments() {
       document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
     }, 0);
   };
+
+  // ✅ Helper : ouvre le zoom depuis une image "section"
+  const clickableMedia = (imgIndex: number, className?: string) => ({
+    onClick: () => openLightbox(imgIndex),
+    role: "button" as const,
+    tabIndex: 0,
+    className: className ?? "project-image",
+  });
 
   return (
     <div className="project-detail-container">
@@ -105,7 +149,6 @@ export default function AnalyseSentiments() {
             <b>Exploration → Prétraitement → Analyse de sentiment → Classification BERT</b>.
           </p>
 
-          {/* Infos clés */}
           <div className="project-info-grid">
             <div className="info-card">
               <h4>Données</h4>
@@ -128,11 +171,7 @@ export default function AnalyseSentiments() {
         </div>
 
         <div className="project-hero-right">
-          <img
-            src={heroImg}
-            alt="Aperçu du projet NLP"
-            className="project-hero-image"
-          />
+          <img src={heroImg} alt="Aperçu du projet NLP" className="project-hero-image" />
         </div>
       </div>
 
@@ -140,12 +179,10 @@ export default function AnalyseSentiments() {
       <section className="project-section">
         <h2>Contexte</h2>
         <p>
-          Le CFPB collecte des réclamations de consommateurs et les transmet aux
-          institutions financières concernées afin d’obtenir une réponse. L’enjeu
-          principal : face à un volume important de textes non structurés, il devient
-          nécessaire d’<b>automatiser la compréhension</b> et la{" "}
-          <b>catégorisation</b> des réclamations afin de gagner du temps et d’améliorer
-          la réactivité du service client.
+          Le CFPB collecte des réclamations de consommateurs et les transmet aux institutions
+          financières concernées afin d’obtenir une réponse. Face à un volume important de textes
+          non structurés, il devient nécessaire d’<b>automatiser la compréhension</b> et la{" "}
+          <b>catégorisation</b> des réclamations.
         </p>
       </section>
 
@@ -157,8 +194,7 @@ export default function AnalyseSentiments() {
             Base : <b>Consumer Complaint Database</b> (CFPB)
           </li>
           <li>
-            Variables clés : <b>Consumer complaint narrative</b> (texte) et{" "}
-            <b>Issue</b> (label)
+            Variables clés : <b>Consumer complaint narrative</b> (texte) et <b>Issue</b> (label)
           </li>
           <li>
             Sous-échantillon utilisé pour l’entraînement : <b>5 000 réclamations</b>
@@ -170,33 +206,27 @@ export default function AnalyseSentiments() {
       <section className="project-section">
         <h2>Exploration & qualité des données</h2>
         <p>
-          J’ai commencé par analyser la structure de la base (dimensions, types de
-          variables) et la présence de valeurs manquantes. Cette étape permet de
-          déterminer quelles colonnes sont réellement exploitables pour un projet NLP.
+          J’ai commencé par analyser la structure de la base et la présence de valeurs manquantes
+          afin de déterminer quelles colonnes sont réellement exploitables pour un projet NLP.
         </p>
 
-        {/* ✅ Image au bon endroit */}
         <div className="project-media">
           <img
             src={capMissingValues}
-            alt="Visualisation des valeurs manquantes"
-            className="project-image"
+            alt={screenshots[0].alt}
+            {...clickableMedia(0)}
           />
           <p className="media-caption">
-            Visualisation des valeurs manquantes : certaines colonnes contiennent
-            beaucoup de NaN, mais la narrative (texte) reste majoritairement exploitable.
+            Visualisation des valeurs manquantes : certaines colonnes contiennent beaucoup de NaN,
+            mais la narrative reste majoritairement exploitable.
           </p>
         </div>
 
-        {/* ✅ INTERPRÉTATION */}
         <div className="insight-box">
           <h3>Interprétation</h3>
           <p>
-            La présence de nombreuses valeurs manquantes sur des champs secondaires
-            (ex. réponse publique, tags) confirme que l’information la plus stable et
-            la plus riche pour un modèle automatique reste le texte libre{" "}
-            <b>Consumer complaint narrative</b>. Cela justifie le choix d’une approche
-            NLP centrée sur le contenu des descriptions.
+            Les champs secondaires sont incomplets, mais la narrative est la plus stable. Cela
+            justifie une approche NLP centrée sur le contenu des descriptions.
           </p>
         </div>
       </section>
@@ -213,24 +243,17 @@ export default function AnalyseSentiments() {
 
           <div className="feature-card">
             <h3>2) Prétraitement texte</h3>
-            <p>
-              Nettoyage, normalisation, suppression du bruit, préparation des labels.
-            </p>
+            <p>Nettoyage, normalisation, suppression du bruit, préparation des labels.</p>
           </div>
 
           <div className="feature-card">
             <h3>3) Analyse de sentiment</h3>
-            <p>
-              Polarité et subjectivité via TextBlob + visualisation de la distribution.
-            </p>
+            <p>Polarité et subjectivité via TextBlob + visualisation de la distribution.</p>
           </div>
 
           <div className="feature-card">
             <h3>4) Classification avec BERT</h3>
-            <p>
-              Tokenization, split train/val, entraînement, évaluation et test sur un
-              exemple.
-            </p>
+            <p>Tokenization, split train/val, entraînement, évaluation et test sur un exemple.</p>
           </div>
         </div>
       </section>
@@ -239,45 +262,39 @@ export default function AnalyseSentiments() {
       <section className="project-section">
         <h2>Répartition des “Issues”</h2>
         <p>
-          Avant d’entraîner le modèle, j’ai étudié la distribution de la variable{" "}
-          <b>Issue</b> afin de comprendre les catégories dominantes et d’identifier un
-          éventuel déséquilibre de classes.
+          Avant d’entraîner le modèle, j’ai étudié la distribution de <b>Issue</b> afin de
+          comprendre les catégories dominantes et identifier un éventuel déséquilibre de classes.
         </p>
 
         <div className="project-media">
           <img
             src={capIssueDistributionBar}
-            alt="Répartition des Issues (bar chart)"
-            className="project-image"
+            alt={screenshots[1].alt}
+            {...clickableMedia(1)}
           />
           <p className="media-caption">
-            Distribution des catégories “Issue” : certaines classes apparaissent très
-            majoritaires.
+            Distribution des catégories “Issue” : certaines classes apparaissent très majoritaires.
           </p>
         </div>
 
         <div className="project-media">
           <img
             src={capIssueDistributionPie}
-            alt="Répartition des Issues (pie chart)"
-            className="project-image"
+            alt={screenshots[2].alt}
+            {...clickableMedia(2)}
           />
           <p className="media-caption">
-            Vue synthétique de la répartition : les premières catégories représentent
-            une grande partie de la base.
+            Vue synthétique de la répartition : les premières catégories représentent une grande
+            partie de la base.
           </p>
         </div>
 
-        {/* ✅ INTERPRÉTATION */}
         <div className="insight-box">
           <h3>Interprétation</h3>
           <p>
-            Les catégories liées au <b>credit reporting</b> sont fortement dominantes
-            (ex : “Incorrect information on your report”, “Improper use of your report”).
-            Cela s’explique par l’impact direct du score de crédit sur la vie
-            quotidienne (accès au prêt, au logement, à l’emploi). Ce déséquilibre a
-            aussi un effet sur la modélisation : le modèle apprend mieux les classes
-            fréquentes que les classes rares.
+            Les catégories liées au credit reporting sont dominantes. Ce déséquilibre a un effet
+            sur la modélisation : le modèle apprend mieux les classes fréquentes que les classes
+            rares.
           </p>
         </div>
       </section>
@@ -286,32 +303,28 @@ export default function AnalyseSentiments() {
       <section className="project-section">
         <h2>Analyse de sentiment</h2>
         <p>
-          J’ai calculé la polarité et la subjectivité des narratives avec{" "}
-          <b>TextBlob</b>, puis j’ai regroupé les textes en trois classes :{" "}
-          <b>négatif</b>, <b>neutre</b> et <b>positif</b>.
+          J’ai calculé la polarité et la subjectivité des narratives avec <b>TextBlob</b>, puis
+          regroupé les textes en trois classes : <b>négatif</b>, <b>neutre</b> et <b>positif</b>.
         </p>
 
         <div className="project-media">
           <img
             src={capSentimentDist}
-            alt="Distribution of sentiments"
-            className="project-image"
+            alt={screenshots[3].alt}
+            {...clickableMedia(3)}
           />
           <p className="media-caption">
-            Distribution des sentiments : neutre légèrement majoritaire, avec des parts
-            proches pour positif et négatif.
+            Distribution des sentiments : neutre légèrement majoritaire, avec des parts proches
+            pour positif et négatif.
           </p>
         </div>
 
-        {/* ✅ INTERPRÉTATION */}
         <div className="insight-box">
           <h3>Interprétation</h3>
           <p>
-            Le fait que le <b>neutre</b> soit majoritaire indique que beaucoup de
-            consommateurs décrivent leur situation de façon factuelle (style “rapport”
-            plutôt qu’émotionnel). Ce signal est utile en entreprise : il peut servir
-            à prioriser automatiquement les cas les plus sensibles (très négatifs) ou
-            à détecter des tendances globales sur la qualité de service.
+            Le neutre majoritaire indique que beaucoup de consommateurs décrivent leur situation de
+            façon factuelle. On peut exploiter ce signal pour prioriser automatiquement certains
+            cas.
           </p>
         </div>
       </section>
@@ -320,29 +333,28 @@ export default function AnalyseSentiments() {
       <section className="project-section">
         <h2>Classification avec BERT</h2>
         <p>
-          Pour prédire la catégorie <b>Issue</b> à partir du texte, j’ai entraîné un
-          modèle basé sur <b>BERT</b> (Transformers). Les textes sont tokenisés puis
-          utilisés pour une tâche de classification multi-classes.
+          Pour prédire <b>Issue</b>, j’ai entraîné un modèle basé sur <b>BERT</b>. Les textes sont
+          tokenisés puis utilisés pour une classification multi-classes.
         </p>
 
         <div className="project-media">
-          
+          <img
+            src={capBertTrainingReport}
+            alt={screenshots[4].alt}
+            {...clickableMedia(4)}
+          />
           <p className="media-caption">
-            Rapport de classification : bonnes performances sur les classes fréquentes,
-            plus faible sur les classes rares.
+            Rapport de classification : bonnes performances sur les classes fréquentes, plus faible
+            sur les classes rares.
           </p>
         </div>
 
-        {/* ✅ INTERPRÉTATION */}
         <div className="insight-box">
           <h3>Interprétation</h3>
           <p>
-            Les résultats montrent une performance correcte pour un premier modèle sur
-            un dataset multi-classes. La difficulté principale vient du{" "}
-            <b>déséquilibre des classes</b> : les catégories minoritaires ont peu
-            d’exemples, ce qui limite la capacité du modèle à généraliser. Des
-            améliorations seraient possibles avec un rééquilibrage, davantage d’epochs,
-            ou une stratégie de pondération des classes.
+            La difficulté principale vient du déséquilibre : les catégories minoritaires ont peu
+            d’exemples. Des améliorations sont possibles (pondération, rééquilibrage, plus d’epochs,
+            etc.).
           </p>
         </div>
       </section>
@@ -351,15 +363,19 @@ export default function AnalyseSentiments() {
       <section className="project-section">
         <h2>Test de prédiction sur un exemple</h2>
         <p>
-          Enfin, j’ai testé le pipeline sur une réclamation fictive afin de valider
-          le comportement du modèle en situation “réelle” : un texte brut en entrée,
-          une catégorie prédite en sortie.
+          Test du pipeline sur une réclamation fictive : un texte brut en entrée, une catégorie
+          prédite en sortie.
         </p>
 
         <div className="project-media">
+          <img
+            src={capPredictionExample}
+            alt={screenshots[5].alt}
+            {...clickableMedia(5)}
+          />
           <p className="media-caption">
-            Exemple de prédiction : le modèle identifie une catégorie cohérente à partir
-            d’une narrative.
+            Exemple de prédiction : le modèle identifie une catégorie cohérente à partir d’une
+            narrative.
           </p>
         </div>
       </section>
@@ -390,32 +406,25 @@ export default function AnalyseSentiments() {
         </div>
 
         <p className="hint">
-          Librairies utilisées : Pandas, NumPy, NLTK, TextBlob, Plotly/Matplotlib,
-          PyTorch, Transformers (Hugging Face).
+          Librairies : Pandas, NumPy, NLTK, TextBlob, Matplotlib/Plotly, PyTorch, Transformers
+          (Hugging Face).
         </p>
       </section>
 
-      {/* ✅ Conclusion générale */}
+      {/* ✅ Conclusion */}
       <section className="project-section">
         <h2>Conclusion</h2>
         <p>
-          Ce projet m’a permis de construire un pipeline NLP complet, depuis
-          l’exploration d’une base réelle jusqu’à l’entraînement d’un modèle BERT de
-          classification. L’approche montre qu’il est possible d’<b>automatiser la
-          catégorisation</b> des réclamations et de fournir un outil utile à un service
-          client pour améliorer la réactivité.
+          Ce projet m’a permis de construire un pipeline NLP complet, depuis l’exploration d’une
+          base réelle jusqu’à l’entraînement d’un modèle BERT de classification.
         </p>
 
         <div className="insight-box">
           <h3>Conclusion générale</h3>
           <p>
-            L’analyse exploratoire met en évidence la dominance des problèmes liés au
-            credit reporting, tandis que l’analyse de sentiment montre que les
-            réclamations sont souvent exprimées de façon neutre et factuelle. Enfin,
-            BERT permet de prédire automatiquement la catégorie “Issue”, avec une
-            performance surtout élevée sur les classes majoritaires. Les prochaines
-            optimisations passeraient par un meilleur équilibre des classes et un
-            fine-tuning plus poussé.
+            La dominance du credit reporting et le neutre majoritaire sont des signaux forts. BERT
+            permet de prédire automatiquement la catégorie “Issue”, avec de meilleures performances
+            sur les classes majoritaires.
           </p>
         </div>
       </section>
@@ -437,18 +446,22 @@ export default function AnalyseSentiments() {
         </p>
       </section>
 
-      {/* ✅ Bonus : Carrousel global (si tu veux) */}
+      {/* ✅ Bonus : Carrousel global */}
       <section className="project-section">
         <h2>Captures (toutes)</h2>
+
         <div className="carousel">
           <button onClick={prev} className="carousel-btn" aria-label="Précédent">
             ‹
           </button>
 
           <img
-            src={screenshots[index]}
-            alt={`Capture ${index + 1}`}
+            src={screenshots[index].src}
+            alt={screenshots[index].alt}
             className="carousel-image"
+            onClick={() => openLightbox(index)}
+            role="button"
+            tabIndex={0}
           />
 
           <button onClick={next} className="carousel-btn" aria-label="Suivant">
@@ -457,9 +470,34 @@ export default function AnalyseSentiments() {
         </div>
 
         <p className="carousel-hint">
-          Astuce : utilise les flèches pour parcourir les captures.
+          Clique sur une capture pour l’agrandir. (ESC pour fermer, ←/→ pour naviguer)
         </p>
       </section>
+
+      {/* ✅ Lightbox (zoom plein écran) */}
+      {isOpen && (
+        <div className="lightbox" onClick={closeLightbox}>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <button className="lightbox-close" onClick={closeLightbox} aria-label="Fermer">
+              ✕
+            </button>
+
+            <button className="lightbox-nav left" onClick={prevLightbox} aria-label="Précédent">
+              ‹
+            </button>
+
+            <img
+              src={screenshots[activeIndex].src}
+              alt={screenshots[activeIndex].alt}
+              className="lightbox-image"
+            />
+
+            <button className="lightbox-nav right" onClick={nextLightbox} aria-label="Suivant">
+              ›
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
