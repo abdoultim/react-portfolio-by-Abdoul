@@ -1,0 +1,43 @@
+.success-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.success-card {
+  width: 100%;
+  max-width: 520px;
+  text-align: center;
+  padding: 30px 22px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+.success-lottie {
+  width: 240px;
+  margin: 0 auto 10px auto;
+}
+
+.success-card h1 {
+  margin: 10px 0 8px 0;
+}
+
+.success-card p {
+  margin: 0 0 18px 0;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+.success-btn {
+  background-color: white !important;
+  color: #050f0b !important;
+  transition: 0.2s ease;
+
+  &:hover {
+    background-color: #5000ca !important;
+    color: white !important;
+  }
+}

@@ -1,110 +1,115 @@
-import React, { useRef, useState } from 'react';
-import '../assets/styles/Contact.scss';
-// import emailjs from '@emailjs/browser';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import SendIcon from '@mui/icons-material/Send';
-import TextField from '@mui/material/TextField';
+import React, { useState } from "react";
+import "../assets/styles/Contact.scss";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import SendIcon from "@mui/icons-material/Send";
+import TextField from "@mui/material/TextField";
 
 function Contact() {
+  const [nom, setNom] = useState<string>("");
+  const [contact, setContact] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
 
-  const [name, setName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [message, setMessage] = useState<string>('');
-
-  const [nameError, setNameError] = useState<boolean>(false);
-  const [emailError, setEmailError] = useState<boolean>(false);
+  const [nomError, setNomError] = useState<boolean>(false);
+  const [contactError, setContactError] = useState<boolean>(false);
   const [messageError, setMessageError] = useState<boolean>(false);
 
-  const form = useRef();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    // ✅ Validation côté front
+    const hasNomError = nom.trim() === "";
+    const hasContactError = contact.trim() === "";
+    const hasMessageError = message.trim() === "";
 
-  const sendEmail = (e: any) => {
-    e.preventDefault();
+    setNomError(hasNomError);
+    setContactError(hasContactError);
+    setMessageError(hasMessageError);
 
-    setNameError(name === '');
-    setEmailError(email === '');
-    setMessageError(message === '');
+    // ❌ On bloque l’envoi si erreur
+    if (hasNomError || hasContactError || hasMessageError) {
+      e.preventDefault();
+      return;
+    }
 
-    /* Uncomment below if you want to enable the emailJS */
-
-    // if (name !== '' && email !== '' && message !== '') {
-    //   var templateParams = {
-    //     name: name,
-    //     email: email,
-    //     message: message
-    //   };
-
-    //   console.log(templateParams);
-    //   emailjs.send('service_id', 'template_id', templateParams, 'api_key').then(
-    //     (response) => {
-    //       console.log('SUCCESS!', response.status, response.text);
-    //     },
-    //     (error) => {
-    //       console.log('FAILED...', error);
-    //     },
-    //   );
-    //   setName('');
-    //   setEmail('');
-    //   setMessage('');
-    // }
+    // ✅ Si tout est OK : Netlify gère l’envoi
   };
 
   return (
     <div id="contact">
       <div className="items-container">
         <div className="contact_wrapper">
-          <h1>Contact Me</h1>
-          <p>Got a project waiting to be realized? Let's collaborate and make it happen!</p>
+          <h1>Me contacter</h1>
+          <p>
+            Une opportunité d’alternance, un stage ou un projet à me proposer ?
+            N’hésitez pas à m’écrire, je vous répondrai rapidement.
+          </p>
+
           <Box
-            ref={form}
             component="form"
+            className="contact-form"
+            name="contact"
+            method="POST"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            action="/success"
+            onSubmit={handleSubmit}
             noValidate
             autoComplete="off"
-            className='contact-form'
           >
-            <div className='form-flex'>
+            {/* ✅ Champ obligatoire pour Netlify */}
+            <input type="hidden" name="form-name" value="contact" />
+
+            {/* ✅ Honeypot anti-spam */}
+            <p style={{ display: "none" }}>
+              <label>
+                Ne remplissez pas ce champ si vous êtes humain :
+                <input name="bot-field" />
+              </label>
+            </p>
+
+            <div className="form-flex">
               <TextField
                 required
-                id="outlined-required"
-                label="Your Name"
-                placeholder="What's your name?"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-                error={nameError}
-                helperText={nameError ? "Please enter your name" : ""}
+                label="Nom"
+                placeholder="Quel est votre nom ?"
+                name="nom"
+                value={nom}
+                onChange={(e) => setNom(e.target.value)}
+                error={nomError}
+                helperText={nomError ? "Veuillez saisir votre nom" : ""}
               />
+
               <TextField
                 required
-                id="outlined-required"
-                label="Email / Phone"
-                placeholder="How can I reach you?"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-                error={emailError}
-                helperText={emailError ? "Please enter your email or phone number" : ""}
+                label="Email ou téléphone"
+                placeholder="Comment puis-je vous recontacter ?"
+                name="contact"
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+                error={contactError}
+                helperText={
+                  contactError
+                    ? "Veuillez saisir une adresse email ou un numéro de téléphone"
+                    : ""
+                }
               />
             </div>
+
             <TextField
               required
-              id="outlined-multiline-static"
               label="Message"
-              placeholder="Send me any inquiries or questions"
+              placeholder="Décrivez votre demande ou votre projet"
+              name="message"
               multiline
               rows={10}
               className="body-form"
               value={message}
-              onChange={(e) => {
-                setMessage(e.target.value);
-              }}
+              onChange={(e) => setMessage(e.target.value)}
               error={messageError}
-              helperText={messageError ? "Please enter the message" : ""}
+              helperText={messageError ? "Veuillez saisir un message" : ""}
             />
-            <Button variant="contained" endIcon={<SendIcon />} onClick={sendEmail}>
-              Send
+
+            <Button variant="contained" endIcon={<SendIcon />} type="submit">
+              Envoyer le message
             </Button>
           </Box>
         </div>

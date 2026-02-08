@@ -1,0 +1,566 @@
+/* =========================
+   Project Detail (dark/light)
+   Dépend de: .main-container.dark-mode / .main-container.light-mode
+   ========================= */
+
+.project-detail-container {
+  width: 100%;
+  max-width: 1100px;
+
+  /* ✅ baisse un peu plus pour éviter d’être collé à l’entête */
+  margin: 7rem auto 0 auto;
+
+  padding: 2.25rem 1.25rem 4rem 1.25rem;
+  scroll-margin-top: 110px;
+
+  /* Texte par défaut (sera écrasé par dark/light) */
+  color: #111;
+}
+
+@media (max-width: 768px) {
+  .project-detail-container {
+    margin-top: 7.5rem;
+    scroll-margin-top: 120px;
+  }
+}
+
+/* --------- Dark / Light theme hooks --------- */
+.main-container.dark-mode {
+  .project-detail-container {
+    color: #fff;
+  }
+
+  .project-section,
+  .info-card,
+  .video-card,
+  .feature-card,
+  .project-media {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+  }
+
+  .project-intro,
+  .hint,
+  .carousel-hint,
+  .pd-note,
+  .footer-credit,
+  .video-caption,
+  .media-caption {
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .back-button {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #fff;
+  }
+
+  .carousel-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #fff;
+  }
+
+  .tech-item {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .external-link {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .insight-box {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    h3 {
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.82);
+    }
+  }
+}
+
+.main-container.light-mode {
+  .project-detail-container {
+    color: #111;
+  }
+
+  .project-section,
+  .info-card,
+  .video-card,
+  .feature-card,
+  .project-media {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    box-shadow: 0 18px 55px rgba(0, 0, 0, 0.10);
+  }
+
+  .project-intro,
+  .hint,
+  .carousel-hint,
+  .pd-note,
+  .footer-credit,
+  .video-caption,
+  .media-caption {
+    color: rgba(0, 0, 0, 0.72);
+  }
+
+  .back-button {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    color: #111;
+  }
+
+  .carousel-btn {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    color: #111;
+  }
+
+  .tech-item {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.10);
+  }
+
+  .external-link {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.10);
+  }
+
+  .insight-box {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.10);
+
+    h3 {
+      color: rgba(0, 0, 0, 0.88);
+    }
+
+    p {
+      color: rgba(0, 0, 0, 0.72);
+    }
+  }
+}
+
+/* --------- Header elements --------- */
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.65rem 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.2s ease;
+  margin-bottom: 1.25rem;
+
+  &:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+  }
+
+  &:active {
+    transform: translateY(0px);
+    opacity: 0.9;
+  }
+}
+
+.project-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.2px;
+  margin-bottom: 0.85rem;
+
+  background: rgba(80, 0, 202, 0.18);
+  border: 1px solid rgba(80, 0, 202, 0.35);
+  color: #cbb3ff;
+}
+
+.project-detail-container h1 {
+  font-size: clamp(1.8rem, 2.4vw, 2.4rem);
+  margin: 0 0 0.65rem 0;
+  letter-spacing: -0.5px;
+}
+
+.project-intro {
+  margin: 0 0 1.6rem 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 900px;
+}
+
+/* ✅ Hero layout (texte + image à droite) */
+.project-hero {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.25rem;
+  align-items: start;
+  margin-bottom: 1.25rem;
+
+  @media (max-width: 980px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.project-hero-left {
+  min-width: 0;
+}
+
+.project-hero-right {
+  min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+
+  @media (max-width: 980px) {
+    justify-content: flex-start;
+  }
+}
+
+.project-hero-image {
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  border-radius: 22px;
+  object-fit: cover;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+  display: block;
+}
+
+/* --------- Info grid --------- */
+.project-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 1.75rem 0;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.info-card {
+  border-radius: 18px;
+  padding: 1rem 1rem;
+  backdrop-filter: blur(10px);
+
+  h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.95rem;
+    opacity: 0.95;
+  }
+
+  p {
+    margin: 0;
+    font-weight: 800;
+    font-size: 1.05rem;
+    line-height: 1.3;
+  }
+
+  span {
+    display: inline-block;
+    margin-top: 0.45rem;
+    font-size: 0.9rem;
+    opacity: 0.85;
+  }
+}
+
+/* ✅ Lien externe */
+.external-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  width: fit-content;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+    text-decoration: underline;
+  }
+}
+
+/* --------- Sections --------- */
+.project-section {
+  border-radius: 22px;
+  padding: 1.35rem 1.25rem;
+  margin: 1rem 0;
+  backdrop-filter: blur(10px);
+
+  /* ✅ Empêche tout débordement horizontal (important pour tes images) */
+  overflow: hidden;
+
+  h2 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.2rem;
+    letter-spacing: -0.2px;
+  }
+
+  p {
+    margin: 0.25rem 0 0 0;
+    line-height: 1.7;
+  }
+
+  ul {
+    margin: 0.25rem 0 0 1.1rem;
+    padding: 0;
+
+    li {
+      margin: 0.4rem 0;
+      line-height: 1.6;
+    }
+  }
+}
+
+/* =========================================================
+   ✅ NOUVEAU : Images “dans les sections” (plots, screenshots)
+   Classes utilisées dans ton React :
+   - .project-media
+   - .project-image
+   - .media-caption
+   ========================================================= */
+.project-media {
+  margin-top: 0.9rem;
+  border-radius: 18px;
+  padding: 0.75rem;
+  overflow: hidden; /* ✅ stop le scroll horizontal */
+  backdrop-filter: blur(10px);
+}
+
+.project-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 520px; /* ajuste si tu veux plus grand */
+  object-fit: contain; /* ✅ garde le plot entier sans le couper */
+  border-radius: 14px;
+  display: block;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+}
+
+.media-caption {
+  margin: 0.75rem 0 0 0;
+  font-size: 0.92rem;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+/* ✅ Bloc d’interprétation */
+.insight-box {
+  margin-top: 0.9rem;
+  border-radius: 18px;
+  padding: 1rem 1rem;
+  backdrop-filter: blur(10px);
+
+  h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.05rem;
+    letter-spacing: -0.2px;
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.7;
+    opacity: 0.95;
+  }
+}
+
+/* ✅ Fonctionnalités (cards) */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 0.5rem;
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feature-card {
+  border-radius: 18px;
+  padding: 1rem 1rem;
+  backdrop-filter: blur(10px);
+
+  h4 {
+    margin: 0 0 0.35rem 0;
+    font-size: 1rem;
+    letter-spacing: -0.2px;
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+}
+
+/* --------- Tech grid --------- */
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.tech-item {
+  border-radius: 16px;
+  padding: 0.85rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  text-align: center;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    opacity: 0.96;
+  }
+
+  img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.25));
+  }
+
+  span {
+    font-size: 0.82rem;
+    font-weight: 700;
+    opacity: 0.9;
+    line-height: 1.2;
+  }
+}
+
+/* ✅ Note sous les technos */
+.pd-note {
+  margin-top: 0.9rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+/* --------- Video --------- */
+.video-card {
+  border-radius: 22px;
+  padding: 1rem;
+  overflow: hidden;
+
+  .video {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    display: block;
+  }
+
+  .video-embed {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+
+    iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-radius: 16px;
+    }
+  }
+}
+
+.video-caption {
+  margin: 0.8rem 0 0 0;
+  font-size: 0.92rem;
+  opacity: 0.9;
+}
+
+/* --------- Carousel --------- */
+.carousel {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 48px 1fr 48px;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 42px 1fr 42px;
+  }
+}
+
+.carousel-image {
+  width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  border-radius: 18px;
+  display: block;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+}
+
+.carousel-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 900;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+  }
+
+  &:active {
+    transform: translateY(0px);
+    opacity: 0.9;
+  }
+
+  @media (max-width: 600px) {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+  }
+}
+
+/* ✅ petit texte sous carousel */
+.hint,
+.carousel-hint {
+  margin-top: 0.85rem;
+  font-size: 0.92rem;
+  opacity: 0.85;
+}
+
+/* --------- Small helpers --------- */
+a {
+  color: inherit;
+}
+
+.project-detail-container * {
+  box-sizing: border-box;
+}

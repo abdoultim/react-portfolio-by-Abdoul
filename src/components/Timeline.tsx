@@ -1,65 +1,77 @@
 import React from "react";
-import '@fortawesome/free-regular-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcase } from '@fortawesome/free-solid-svg-icons';
-import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
-import 'react-vertical-timeline-component/style.min.css';
-import '../assets/styles/Timeline.scss'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBriefcase, faGraduationCap } from "@fortawesome/free-solid-svg-icons";
+import {
+  VerticalTimeline,
+  VerticalTimelineElement,
+} from "react-vertical-timeline-component";
+import "react-vertical-timeline-component/style.min.css";
+import "../assets/styles/Timeline.scss";
 
 function Timeline() {
   return (
     <div id="history">
       <div className="items-container">
-        <h1>Career History</h1>
+        <h1>Expériences professionnelles</h1>
+
         <VerticalTimeline>
+          {/* Expérience 1 */}
           <VerticalTimelineElement
             className="vertical-timeline-element--work"
-            contentStyle={{ background: 'white', color: 'rgb(39, 40, 34)' }}
-            contentArrowStyle={{ borderRight: '7px solid  white' }}
-            date="2022 - present"
-            iconStyle={{ background: '#5000ca', color: 'rgb(39, 40, 34)' }}
+            contentStyle={{ background: "white", color: "rgb(39, 40, 34)" }}
+            contentArrowStyle={{ borderRight: "7px solid white" }}
+            date="Déc. 2024 — Fév. 2025"
+            iconStyle={{ background: "#5000ca", color: "rgb(39, 40, 34)" }}
             icon={<FontAwesomeIcon icon={faBriefcase} />}
           >
-            <h3 className="vertical-timeline-element-title">Technology Consultant</h3>
-            <h4 className="vertical-timeline-element-subtitle">Dallas, TX</h4>
+            <h3 className="vertical-timeline-element-title">
+              Développeur Web — Stage
+            </h3>
+            <h4 className="vertical-timeline-element-subtitle">
+              Société Générale Côte d’Ivoire — Abidjan
+            </h4>
             <p>
-              Full-stack Web Development, GenAI/LLM, Project Management, Business Development
+              Conception & développement d’une application interne (suivi client, mobile & web).
+              Automatisation de processus métiers. Intégration via API, tests, correction de bugs
+              et amélioration continue.
             </p>
           </VerticalTimelineElement>
+
+          {/* Expérience 2 */}
           <VerticalTimelineElement
             className="vertical-timeline-element--work"
-            date="2020 - 2022"
-            iconStyle={{ background: '#5000ca', color: 'rgb(39, 40, 34)' }}
+            date="Juin 2024 — Sept. 2024"
+            iconStyle={{ background: "#5000ca", color: "rgb(39, 40, 34)" }}
             icon={<FontAwesomeIcon icon={faBriefcase} />}
           >
-            <h3 className="vertical-timeline-element-title">Full Stack Engineer</h3>
-            <h4 className="vertical-timeline-element-subtitle">Laie, HI</h4>
+            <h3 className="vertical-timeline-element-title">
+              Chargé d’études actuarielles — Stage
+            </h3>
+            <h4 className="vertical-timeline-element-subtitle">
+              Generali Vie — Saint-Denis (France)
+            </h4>
             <p>
-              Frontend Development, Backend Development, User Experience, Team Leading
+              Contribution au suivi des risques et à l’évaluation de l’exigence en capital (SCR).
+              Extraction & manipulation de données, reporting et amélioration d’outils internes.
             </p>
           </VerticalTimelineElement>
+
+          {/* Expérience 3 */}
           <VerticalTimelineElement
             className="vertical-timeline-element--work"
-            date="2021 - 2021"
-            iconStyle={{ background: '#5000ca', color: 'rgb(39, 40, 34)' }}
+            date="Mai 2020 — Juil. 2020"
+            iconStyle={{ background: "#5000ca", color: "rgb(39, 40, 34)" }}
             icon={<FontAwesomeIcon icon={faBriefcase} />}
           >
-            <h3 className="vertical-timeline-element-title">Staff Engineer Intern</h3>
-            <h4 className="vertical-timeline-element-subtitle">Laie, HI</h4>
+            <h3 className="vertical-timeline-element-title">
+              Chargé d’études statistiques — Stage
+            </h3>
+            <h4 className="vertical-timeline-element-subtitle">
+              Direction Générale des Impôts — Abidjan (Côte d’Ivoire)
+            </h4>
             <p>
-              Full-stack Development, API Development, User Experience
-            </p>
-          </VerticalTimelineElement>
-          <VerticalTimelineElement
-            className="vertical-timeline-element--work"
-            date="2020 - 2020"
-            iconStyle={{ background: '#5000ca', color: 'rgb(39, 40, 34)' }}
-            icon={<FontAwesomeIcon icon={faBriefcase} />}
-          >
-            <h3 className="vertical-timeline-element-title">Data Analyst Intern</h3>
-            <h4 className="vertical-timeline-element-subtitle">Tokyo, Japan</h4>
-            <p>
-              Automation, Data Governance, Statistical Analysis
+              Analyse & prévision de recettes fiscales, segmentation/profilage, études de
+              comportement & techniques d’analyse de données pour comprendre la conformité/fraude.
             </p>
           </VerticalTimelineElement>
         </VerticalTimeline>

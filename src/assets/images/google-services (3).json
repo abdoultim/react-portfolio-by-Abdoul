@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "840625083225",
+    "project_id": "busivoire225",
+    "storage_bucket": "busivoire225.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840625083225:android:f0b607784c8b27acccb248",
+        "android_client_info": {
+          "package_name": "com.abdoulkt.ivoirebusmobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASh-MCknPok6UlIdOIzEwRVQfMvblbl_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840625083225:android:2910e945631d44d3ccb248",
+        "android_client_info": {
+          "package_name": "com.codingwitht.login_flutter_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASh-MCknPok6UlIdOIzEwRVQfMvblbl_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840625083225:android:be258acdcad0b580ccb248",
+        "android_client_info": {
+          "package_name": "com.example.ivoirebus_driver_portal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASh-MCknPok6UlIdOIzEwRVQfMvblbl_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
